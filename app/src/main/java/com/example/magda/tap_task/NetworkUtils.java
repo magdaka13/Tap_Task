@@ -57,7 +57,7 @@ public final class NetworkUtils {
      */
     private static URL buildUrlItemsName(String x) {
         Uri itemQueryUri = Uri.parse(TAP_URL).buildUpon()
-                .appendPath("name="+x)
+                .appendQueryParameter("name",x)
                 .build();
 
         try {
@@ -118,39 +118,6 @@ public final class NetworkUtils {
                     Log.e(TAG,"Parsing name="+ii.getmText()+" image="+ii.getmImage());
                 }
             }
-/*
-
-                if (ItemJson.has("name")) {
-                    int errorCode = ItemJson.getInt("name");
-
-                    switch (errorCode) {
-                        case HttpURLConnection.HTTP_OK:
-                            Log.e(TAG,"Parsing JSON-HTTP OK");
-                            break;
-                        case HttpURLConnection.HTTP_NOT_FOUND:
-                            Log.e(TAG,"Parsing JSON-HTTP NOT FOUND");
-                    /* Location invalid */
-//                            return null;
-  //                      default:
-    //                        Log.e(TAG,"Parsing JSON-SERVER DOWN");
-                    /* Server probably down */
-        //                    return null;
-      //              }
-          //      }
-/*
-                JSONArray jsonItemArray = ItemJson.getJSONArray("");
-                if (jsonItemArray!=null)
-                {
-                    for (int i=0;i<jsonItemArray.length();i++)
-                    {
-                        JSONObject item=jsonItemArray.getJSONObject(i);
-                        Item ii=new Item(item.getString("name"),item.getString("image"));
-                        p.add(ii);
-                        Log.e(TAG,"Parsing name="+ii.getmText()+" image="+ii.getmImage());
-                    }
-                }
-*/
-
 
         }
      catch (Exception e) {
@@ -158,6 +125,36 @@ public final class NetworkUtils {
         e.printStackTrace();
         p=null;
     }finally {
+            return p;
+        }
+    }
+
+
+    public static ArrayList<Item> parseJSON_secondUrl(String name) {
+        String resp="";
+        ArrayList<Item> p = new ArrayList<Item>();
+
+        URL u=buildUrlItemsName(name);
+
+        try
+        {
+            resp = getResponseFromHttpUrl(u);
+
+            JSONObject item = new JSONObject(resp);
+            if (item!=null)
+            {
+                    Item ii=new Item(item.getString("text"),item.getString("image"));
+                    p.add(ii);
+                    Log.e(TAG,"Parsing name="+ii.getmText()+" image="+ii.getmImage());
+
+            }
+
+        }
+        catch (Exception e) {
+            /* Server probably invalid */
+            e.printStackTrace();
+            p=null;
+        }finally {
             return p;
         }
     }

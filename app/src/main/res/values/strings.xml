@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Tap_Task</string>
+    <string name="title_activity_detail">Item Detail</string>
 </resources>
